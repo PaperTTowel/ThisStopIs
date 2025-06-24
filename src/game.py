@@ -142,9 +142,15 @@ class StationManager:
 
     surf.blit(timer_text, (180, 200))
 
-  def stageBGS(self):
+  def stageBGS(self, humanLen):
     global canExit
+    if humanLen == 0:
+      self.doorChime.stop()
+      self.trainBGS.stop()
+      self.trainDoorClosing.stop()
+      self.trainPlatform.stop()
     if self.stage_state != self.prev_stage_state:
+        
       self.prev_stage_state = self.stage_state
 
       if self.stage_state == StationManager.stationStatus.MOVING:
@@ -167,7 +173,6 @@ class StationManager:
         self.doorChime.play(-1)
         self.trainPlatform.stop()
         self.trainDoorClosing.play()
-      
 
   # 배경 변경 시간 카운트
   def stage(self, frameTime, surf):

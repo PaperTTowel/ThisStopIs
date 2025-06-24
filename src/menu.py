@@ -62,10 +62,33 @@ class MenuManager:
       txt = self.MenuFont.render(text, True, color)
       surf.blit(txt, (10, 80 + i * 32))
 
+  def complete(self, display, screen, clock, score):
+    end = pygame.image.load(f"resource\\complete.png").convert_alpha()
+    end = pygame.transform.scale(end, (320, 240))
+    endSound = pygame.mixer.Sound(f"resource\\[SE]complete.mp3")
+
+    endSound.play()
+    self.end = True
+
+    while self.end:
+      for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+          self.end = False
+
+      self.score = self.MenuFont.render(f"점수: {score}", True, (255, 255, 255))
+
+      display.fill((0, 0, 0))
+      display.blit(end, (0, 0))
+      display.blit(self.score, (200, 200))
+      
+      screen.blit(pygame.transform.scale(display, screen.get_size()), (0, 0))
+      pygame.display.update()
+      clock.tick(60)
+
   def logo(self, display, screen, clock):
     logo = pygame.image.load(f"resource\\logo.png").convert_alpha()
-    logoSound = pygame.mixer.Sound(f"resource\\[SE]startup.mp3")
     logo = pygame.transform.scale(logo, (320, 240))
+    logoSound = pygame.mixer.Sound(f"resource\\[SE]startup.mp3")
 
     self.startTime = pygame.time.get_ticks()
     self.starting = True

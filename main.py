@@ -33,6 +33,8 @@ class Main:
     self.humans = Humans.generate_humans(1, 10, self.station_data)
     self.stationMgr = StationManager("resource", self.station_data)
 
+    self.max_score = len(self.humans)
+
     # 기타
     self.frameTime = pygame.time.Clock()
     self.score = 0
@@ -40,7 +42,7 @@ class Main:
   # 게임실행 && 반복
   def run(self):
     # 나중에 itch.io에 퍼블리시 할 경우 아래 코드 주석 해제
-    # self.menuMgr.logo(self.display, self.screen, self.frameTime)
+    self.menuMgr.logo(self.display, self.screen, self.frameTime)
     while self.running:
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -97,12 +99,17 @@ class Main:
         self.stationMgr.stage(self.frameTime, self.display)
 
         # 사운드
-        self.stationMgr.stageBGS()
+        self.stationMgr.stageBGS(len(self.humans))
 
         # UI 렌더링
         self.stationMgr.text(self.display)
         self.stationMgr.scoreText(self.display, self.score)
         self.stationMgr.render_timer(self.display)
+
+        if len(self.humans) == 0:
+          self.running = False
+          self.stationMgr.stageBGS(0)
+          self.menuMgr.complete(self.display, self.screen, self.frameTime, self.score)
 
       # 화면출력 && 업데이트 (60프레임 고정)
       self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0, 0))
